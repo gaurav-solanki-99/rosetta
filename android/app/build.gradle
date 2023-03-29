@@ -1,0 +1,116 @@
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withReader('UTF-8') { reader ->
+        localProperties.load(reader)
+    }
+}
+
+def flutterRoot = localProperties.getProperty('flutter.sdk')
+if (flutterRoot == null) {
+    //throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
+}
+
+def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
+if (flutterVersionCode == null) {
+    flutterVersionCode = '1'
+}
+
+def flutterVersionName = localProperties.getProperty('flutter.versionName')
+if (flutterVersionName == null) {
+    flutterVersionName = '1.0'
+}
+
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
+
+android {
+    /*signingConfigs {
+        config {
+            storeFile file('/home/lipl-222/Desktop/cppatidarRosetta/rosetta/Key&jks/rosetta.jks')
+            storePassword '123456'
+            keyPassword '123456'
+            keyAlias 'rosetta'
+        }
+    }*/
+    compileSdkVersion 31
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
+
+    defaultConfig {
+        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
+        applicationId "com.rosetta.rosetta_fluter_app"
+        minSdkVersion 28
+        targetSdkVersion 31
+        versionCode flutterVersionCode.toInteger()
+        versionName flutterVersionName
+        multiDexEnabled true
+
+
+    }
+   /* signingConfigs {
+        release {
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+            storePassword keystoreProperties['storePassword']
+        }
+    }*/
+
+    signingConfigs {
+        config {
+            storeFile file('/home/lipl-222/Desktop/Test_flutter/rosetta(5-12-22) (1)/rosetta/Key&jks/rosetta.jks')
+            storePassword '123456'
+            keyPassword '123456'
+            keyAlias 'rosetta'
+        }
+    }
+
+    buildTypes {
+        debug{
+            applicationIdSuffix ".debug"
+            versionNameSuffix "-debug"
+        }
+        release {
+            signingConfig signingConfigs.config
+            minifyEnabled true
+            shrinkResources true // add this
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+       /* release {
+            // TODO: Add your own signing config for the release build.
+            // Signing with the debug keys for now, so `flutter run --release` works.
+              signingConfigs.debug  //by 24 sep
+            // if everything ok then not add
+            minifyEnabled true
+            shrinkResources true // add this
+            //another you can remove minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard- android.txt'), 'proguard-rules.pro'
+                    signingConfig signingConfigs.release
+        }*/
+    }
+}
+
+flutter {
+    source '../..'
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+//    Implementation 'junit:junit:4.12' androidTest
+//    Implementation 'androidx.test:runner:1.1.1' androidTest
+//    Implementation 'androidx.test.espresso:espresso-core:3.1.1'
+//    implementation 'androidx.multidex:multidex:2.0.1'
+}
